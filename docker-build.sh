@@ -41,18 +41,22 @@ apt-get install -qy --no-install-recommends \
     libcap2-bin \
     tzdata
 
-# Remove bundled mongodb and install
+# Remove bundled MongoDB
 apt-get remove -qy mongodb mongodb-server mongodb-clients || true
 
+# Add MongoDB 8.1 GPG key
 curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
     gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
 
+# Add MongoDB 8.1 repo
 echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] \
-    https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.2 multiverse" | \
-    tee /etc/apt/sources.list.d/mongodb-org-8.2.list
+    https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.1 multiverse" | \
+    tee /etc/apt/sources.list.d/mongodb-org-8.1.list
 
 apt-get update
-apt-get install -qy --no-install-recommends mongodb-org-server=8.2.0 mongodb-mongosh mongodb-org-tools=8.2.0
+
+# Install MongoDB 8.1
+apt-get install -qy --no-install-recommends mongodb-org-server=8.1 mongodb-mongosh mongodb-org-tools=8.1
 
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
