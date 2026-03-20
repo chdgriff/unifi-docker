@@ -44,16 +44,15 @@ apt-get install -qy --no-install-recommends \
 # Remove bundled mongodb and install
 apt-get remove -qy mongodb mongodb-server mongodb-clients || true
 
-curl -fsSL https://pgp.mongodb.com/server-8.0.asc | \
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
     gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
 
 echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] \
-    https://repo.mongodb.com/apt/ubuntu noble/mongodb-enterprise/8.2 multiverse" | \
-    tee /etc/apt/sources.list.d/mongodb-enterprise-8.2.list
+    https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.2 multiverse" | \
+    tee /etc/apt/sources.list.d/mongodb-org-8.2.list
 
 apt-get update
-apt-get install -qy --no-install-recommends mongodb-enterprise=8.2.0 mongodb-enterprise-database=8.2.0 \
-    mongodb-enterprise-server=8.2.0 mongodb-mongosh mongodb-enterprise-mongos=8.2.0 mongodb-enterprise-tools=8.2.0
+apt-get install -qy --no-install-recommends mongodb-org-server=8.2.0 mongodb-mongosh mongodb-org-tools=8.2.0
 
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
