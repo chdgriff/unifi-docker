@@ -34,7 +34,6 @@ trap 'kill ${!}; exit_handler' SIGHUP SIGINT SIGQUIT SIGTERM
 
 [ "x${JAVA_HOME}" != "x" ] || set_java_home
 
-
 # vars similar to those found in unifi.init
 MONGOPORT=27117
 
@@ -46,16 +45,10 @@ RUNLINK=${BASEDIR}/run
 DIRS="${RUNDIR} ${LOGDIR} ${DATADIR} ${BASEDIR}"
 
 JVM_MAX_HEAP_SIZE=${JVM_MAX_HEAP_SIZE:-1024M}
-#JVM_INIT_HEAP_SIZE=
-
-#JAVA_ENTROPY_GATHER_DEVICE=
-#UNIFI_JVM_EXTRA_OPTS=
-#ENABLE_UNIFI=yes
-
 
 MONGOLOCK="${DATAPATH}/db/mongod.lock"
 JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} --add-opens=java.base/java.time=ALL-UNNAMED -Dunifi.datadir=${DATADIR} -Dunifi.logdir=${LOGDIR} -Dunifi.rundir=${RUNDIR}"
-PIDFILE=/var/run/unifi/unifi.pid
+PIDFILE=${RUNDIR}/unifi.pid
 
 if [ ! -z "${JVM_MAX_HEAP_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xmx${JVM_MAX_HEAP_SIZE}"
@@ -69,13 +62,12 @@ if [ ! -z "${JVM_MAX_THREAD_STACK_SIZE}" ]; then
   JVM_EXTRA_OPTS="${JVM_EXTRA_OPTS} -Xss${JVM_MAX_THREAD_STACK_SIZE}"
 fi
 
-
 JVM_OPTS="${JVM_EXTRA_OPTS}
   -Djava.awt.headless=true
   -Dfile.encoding=UTF-8"
 
 # Cleaning /var/run/unifi/* See issue #26, Docker takes care of exlusivity in the container anyway.
-rm -f /var/run/unifi/unifi.pid
+rm -f ${PIDFILE}
 
 run-parts /usr/local/unifi/init.d
 run-parts /usr/unifi/init.d
