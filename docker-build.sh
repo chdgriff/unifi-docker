@@ -24,10 +24,9 @@ addKey() {
     return 1
 }
 
-if [ "x${1}" == "x" ]; then
-    echo please pass PKGURL as an environment variable
-    exit 0
-fi
+# Check required arguments
+[ -z "$1" ] && echo "please pass PKGURL" && exit 1
+[ -z "$2" ] && echo "please pass MONGODB_VERSION" && exit 1
 
 apt-get update
 apt-get install -qy --no-install-recommends \
@@ -44,18 +43,18 @@ apt-get install -qy --no-install-recommends \
 # Remove bundled MongoDB
 apt-get remove -qy mongodb mongodb-server mongodb-clients || true
 
-# Add MongoDB 8.0 GPG key
-curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-    gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg --dearmor
+# Add MongoDB GPG key
+curl -fsSL https://www.mongodb.org/static/pgp/server-${2}.asc | \
+    gpg -o /usr/share/keyrings/mongodb-server-${2}.gpg --dearmor
 
-# Add MongoDB 8.0 repo
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] \
-    https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | \
-    tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+# Add Mongo Repository
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-${2}.gpg ] \
+    https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/${2} multiverse" | \
+    tee /etc/apt/sources.list.d/mongodb-org-${2}.list
 
 apt-get update
 
-# Install MongoDB from installed repo
+# Install MongoDB from Mongo Repository
 apt-get install -qy --no-install-recommends mongodb-org-server mongodb-mongosh mongodb-org-tools
 
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
