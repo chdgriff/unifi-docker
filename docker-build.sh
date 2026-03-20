@@ -52,7 +52,7 @@ https://repo.mongodb.com/apt/ubuntu noble/mongodb-enterprise/8.2 multiverse" | \
 tee /etc/apt/sources.list.d/mongodb-enterprise-8.2.list
 
 apt-get update
-sudo apt-get install -y mongodb-enterprise=8.2.0 mongodb-enterprise-database=8.2.0 mongodb-enterprise-server=8.2.0 mongodb-mongosh mongodb-enterprise-mongos=8.2.0 mongodb-enterprise-tools=8.2.0
+apt-get install -y mongodb-enterprise=8.2.0 mongodb-enterprise-database=8.2.0 mongodb-enterprise-server=8.2.0 mongodb-mongosh mongodb-enterprise-mongos=8.2.0 mongodb-enterprise-tools=8.2.0
 
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 tryfail apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 06E85760C0A52C50
