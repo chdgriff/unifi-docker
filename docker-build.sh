@@ -54,7 +54,6 @@ apt-get update
 
 # Install MongoDB from Mongo Repository
 apt-get install -qy --no-install-recommends mongodb-org-server mongodb-mongosh mongodb-org-tools
-
 ### End MongoDB Install
 
 echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | tee /etc/apt/sources.list.d/100-ubnt-unifi.list
