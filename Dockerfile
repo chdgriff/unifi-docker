@@ -14,6 +14,9 @@ ARG PKGURL=https://dl.ui.com/unifi/10.2.105/unifi_sysvinit_all.deb
 
 ARG MONGODB_VERSION=8.0
 
+ARG UNIFI_UID=999
+ARG UNIFI_GID=999
+
 ENV BASEDIR=/usr/lib/unifi \
     DATADIR=/unifi/data \
     LOGDIR=/unifi/log \
@@ -28,8 +31,8 @@ ENV BASEDIR=/usr/lib/unifi \
     GOSU_VERSION=1.10 \
     BIND_PRIV=true \
     RUNAS_UID0=true \
-    UNIFI_GID=999 \
-    UNIFI_UID=999
+    UNIFI_UID=$UNIFI_UID \
+    UNIFI_GID=$UNIFI_GID
 
 # Install gosu
 # https://github.com/tianon/gosu/blob/master/INSTALL.md
