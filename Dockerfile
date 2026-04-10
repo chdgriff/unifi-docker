@@ -10,7 +10,7 @@ LABEL maintainer="Jacob Alberty <jacob.alberty@foundigital.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG PKGURL=https://dl.ui.com/unifi/10.1.89/unifi_sysvinit_all.deb
+ARG PKGURL=https://dl.ui.com/unifi/10.2.105/unifi_sysvinit_all.deb
 
 ARG MONGODB_VERSION=8.0
 
@@ -50,11 +50,12 @@ COPY docker-build.sh /usr/local/bin/
 COPY functions /usr/unifi/functions
 COPY import_cert /usr/unifi/init.d/
 COPY pre_build /usr/local/docker/pre_build
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
- && chmod +x /usr/unifi/init.d/import_cert \
- && chmod +x /usr/local/bin/docker-healthcheck.sh \
- && chmod +x /usr/local/bin/docker-build.sh \
- && chmod -R +x /usr/local/docker/pre_build
+RUN chmod +rx /usr/local/bin/docker-entrypoint.sh \
+ && chmod +rx /usr/unifi/init.d/import_cert \
+ && chmod +r  /usr/unifi/functions \
+ && chmod +rx /usr/local/bin/docker-healthcheck.sh \
+ && chmod +rx /usr/local/bin/docker-build.sh \
+ && chmod -R +rx /usr/local/docker/pre_build
 
 RUN set -ex \
  && mkdir -p /usr/share/man/man1/ \
