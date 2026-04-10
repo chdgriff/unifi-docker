@@ -9,8 +9,9 @@ on:
       - 'v*.*.*'
 
 env:
-  TEST_TAG: jacobalberty/unifi:test
-  PKGURL: https://dl.ui.com/unifi/6.5.55/unifi_sysvinit_all.deb
+  TEST_TAG: chdgriff/unifi:test
+  PKGURL: https://dl.ui.com/unifi/10.1.89/unifi_sysvinit_all.deb
+  MONGODB_VERSION: 8.0
 
 jobs:
   build:
@@ -43,11 +44,26 @@ jobs:
           tags: ${{ env.TEST_TAG }}
       - name: Test image
         run: |
-          export PKGURL=${{env.PKGURL}} &&
-          docker run -d --env PKGURL --rm --name unifitest ${{env.TEST_TAG}} &&
-          sleep 35 &&
-          for i in $(seq 1 10); do [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] && break ||  sleep 35; done &&
-          [ $(docker inspect --format='{{json .State.Health.Status}}' unifitest ) == \"healthy\" ] &&
+          export PKGURL="${{ env.PKGURL }}"
+          export MONGODB_VERSION="${{ env.MONGODB_VERSION }}"
+          docker run -d \
+            --env PKGURL \
+            --env MONGODB_VERSION \
+            --rm \
+            --name unifitest \
+            ${{ env.TEST_TAG }}
+
+          sleep 35
+          for i in $(seq 1 10); do
+            STATUS=$(docker inspect --format='{{json .State.Health.Status}}' unifitest)
+            [ "$STATUS" == "\"healthy\"" ] && break || sleep 35
+          done
+
+          STATUS=$(docker inspect --format='{{json .State.Health.Status}}' unifitest)
+          if [ "$STATUS" != "\"healthy\"" ]; then
+            docker logs unifitest
+            exit 1
+          fi
           docker stop unifitest
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -60,7 +76,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=ref,event=branch
           images: |
-            jacobalberty/unifi
+            chdgriff/unifi
             ghcr.io/${{ github.repository }}
       - name: Build container image
         uses: docker/build-push-action@v6
